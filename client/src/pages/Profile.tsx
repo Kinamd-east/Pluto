@@ -4,10 +4,7 @@ import {
   where,
   getDoc,
   getDocs,
-  updateDoc,
   doc,
-  increment,
-  arrayUnion,
 } from "firebase/firestore";
 import { Copy } from "lucide-react";
 import { db } from "../firebase";
@@ -38,7 +35,6 @@ type CardDoc = {
   exp: number;
   isEvolvable: boolean;
   rarity?: string;
-  price: number;
 };
 
 const Profile = () => {
@@ -164,7 +160,11 @@ const Profile = () => {
         </div>
 
         {/* Inventory Display */}
-        {userCards && userCards.length > 0 ? (
+        {isFindingInventory ? (
+          <p className="text-center text-gray-500 dark:text-gray-400">
+            Loading Inventory...
+          </p>
+        ) : userCards && userCards.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
             {userCards.map((card) => (
               <div

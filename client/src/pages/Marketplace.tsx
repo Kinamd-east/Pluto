@@ -11,14 +11,14 @@ import { updateDoc, doc, increment, arrayUnion } from "firebase/firestore";
 import { db } from "../firebase";
 
 const Marketplace = () => {
-  const { connectWallet, signer, walletAddress } = useWallet();
+  const { signer, walletAddress } = useWallet();
   const [purchasingTokenURI, setPurchasingTokenURI] = useState<string | null>(
     null,
   );
   const { cards, loading } = useCards();
   const cardMarketplace = useCardMarketplaceContract(signer);
 
-  const handleBuyCard = async (card) => {
+  const handleBuyCard = async (card: any) => {
     if (!signer || !walletAddress || !cardMarketplace) return;
 
     const coinContract = new ethers.Contract(
@@ -55,7 +55,7 @@ const Marketplace = () => {
       await updateDoc(doc(db, "users", walletAddress), {
         coins: increment(-card.price), // deduct coin
         inventory: arrayUnion({
-          tokenURI: string,
+          tokenURI: card.tokenURI,
           id: card.id,
           name: card.name,
           description: card.description,
@@ -127,14 +127,15 @@ const Marketplace = () => {
                 >
                   See more →
                 </CardItem>
-                <Button
-                  translatez={20}
+                <CardItem
+                  translateZ={20}
+                  as="button"
                   disabled={purchasingTokenURI === card.tokenURI}
                   onClick={() => handleBuyCard(card)}
                   className="px-4 py-2 rounded-xl bg-black dark:bg-white dark:text-black text-white text-xs font-bold cursor-pointer"
                 >
                   {purchasingTokenURI === card.tokenURI ? "Buying..." : "Buy"}
-                </Button>
+                </CardItem>
               </div>
             </CardBody>
           </CardContainer>

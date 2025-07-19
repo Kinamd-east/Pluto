@@ -1,56 +1,17 @@
 import { useEffect, useState } from "react";
 import { useWalletContext } from "./contexts/WalletContext";
-import { usePlutoCoinStoreContract } from "./hooks/usePlutoCoinStore";
 import { usePlutoCoinContract } from "./hooks/usePlutoCoin";
-import { toast } from "sonner";
-import { ethers } from "ethers";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router";
-import { updateDoc, doc, increment } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 import { db } from "./firebase";
 
 const Navbar = () => {
   const { connectWallet, signer, walletAddress, loading } = useWalletContext();
-  const coinStoreContract = usePlutoCoinStoreContract(signer);
   const coinContract = usePlutoCoinContract(signer);
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [amountInEth, setAmountInEth] = useState("0.0005");
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [coinBalance, setCoinBalance] = useState("0");
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const handleBuyCoins = async () => {
-    if (!coinStoreContract || !signer || !coinContract || !walletAddress)
-      return;
-
-    try {
-      setIsLoading(true);
-
-      const tx = await coinStoreContract.buyCoins({
-        value: ethers.parseEther(amountInEth),
-      });
-      await tx.wait();
-
-      // 🔥 Calculate how many coins to add
-      const coinsToAdd = (parseFloat(amountInEth) * 160000).toFixed(0);
-
-      // 🔥 Update Firestore balance
-      await updateDoc(doc(db, "users", walletAddress), {
-        coins: increment(Number(coinsToAdd)),
-      });
-
-      toast("Coins purchased!!!");
-      const balance = await coinContract.balanceOf(walletAddress);
-      setCoinBalance(balance.toString());
-    } catch (error) {
-      console.error("Failed to buy coins:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
     const syncBalanceWithFirestore = async () => {

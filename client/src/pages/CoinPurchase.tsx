@@ -1,12 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Copy } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useWalletContext } from "../contexts/WalletContext";
 import { usePlutoCoinStoreContract } from "../hooks/usePlutoCoinStore";
 import { usePlutoCoinContract } from "../hooks/usePlutoCoin";
 import { toast } from "sonner";
 import { ethers } from "ethers";
-import { Link, useNavigate } from "react-router";
 import { updateDoc, doc, increment } from "firebase/firestore";
 import { db } from "../firebase";
 
@@ -21,13 +19,12 @@ const coinPacks = [
 ];
 
 const CoinPurchase = () => {
-  const { connectWallet, signer, walletAddress } = useWalletContext();
+  const { signer, walletAddress } = useWalletContext();
   const coinStoreContract = usePlutoCoinStoreContract(signer);
   const coinContract = usePlutoCoinContract(signer);
 
   // const [price, setAmountInEth] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
 
   const handleBuyCoins = async (price: number) => {
     if (!coinStoreContract || !signer || !coinContract || !walletAddress)
@@ -51,7 +48,6 @@ const CoinPurchase = () => {
       });
 
       toast("Coins successfully purchased!!!");
-      const balance = await coinContract.balanceOf(walletAddress);
     } catch (error) {
       console.error("Failed to buy coins:", error);
     } finally {
@@ -79,7 +75,6 @@ const CoinPurchase = () => {
             </h2>
             <p className="text-xl text-green-400 mb-4">{pack.price} ETH</p>
             <Button
-              variant="primary"
               disabled={isLoading}
               className="w-full cursor-pointer bg-yellow-400 text-black font-semibold hover:bg-yellow-300 disabled:bg-gray-400"
               onClick={() => handleBuyCoins(pack.price)}

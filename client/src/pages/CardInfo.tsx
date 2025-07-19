@@ -43,6 +43,7 @@ const CardInfo = () => {
   const [isBuying, setIsBuying] = useState(false);
   const [isFindingCard, setIsFindingCard] = useState(false);
   const cardMarketplace = useCardMarketplaceContract(signer);
+  if (!id) throw new Error("Token ID is undefined");
   const fullTokenURI = toIpfsUri(id);
   const coinContract = usePlutoCoinContract(signer);
 
