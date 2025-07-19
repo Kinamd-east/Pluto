@@ -42,10 +42,11 @@ const Profile = () => {
   const [copied, setCopied] = useState(false);
   const [isFindingProfile, setIsFindingProfile] = useState(false);
   const [profile, setProfile] = useState<ProfileDoc | null>(null);
-  const [userCards, setUserCards] = useState<CardDoc | null>(null);
+  const [userCards, setUserCards] = useState<CardDoc[]>([]);
   const [isFindingInventory, setIsFindingInventory] = useState(false);
 
   const copyToClipboard = () => {
+    if (!profile) return;
     navigator.clipboard.writeText(profile.id);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
@@ -85,7 +86,7 @@ const Profile = () => {
           const snap = await getDocs(q);
           if (!snap.empty) {
             const docSnap = snap.docs[0];
-            return { id: docSnap.id, ...(docSnap.data() as CardDoc) };
+            return { ...(docSnap.data() as CardDoc), id: docSnap.id };
           }
           return null;
         });
@@ -166,7 +167,7 @@ const Profile = () => {
           </p>
         ) : userCards && userCards.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
-            {userCards.map((card) => (
+            {userCards.map((card: any) => (
               <div
                 key={card.tokenURI}
                 className="bg-white dark:bg-neutral-900 rounded-xl shadow-md border dark:border-white/20 border-black/10 p-4 flex flex-col gap-4"

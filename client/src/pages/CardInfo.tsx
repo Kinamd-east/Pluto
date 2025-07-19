@@ -6,7 +6,6 @@ import { usePlutoCoinContract } from "../hooks/usePlutoCoin";
 import { useWalletContext } from "@/contexts/WalletContext";
 import { Button } from "@/components/ui/button";
 import { toIpfsUri } from "@/lib/ipfs";
-import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import {
   collection,
   query,
@@ -83,7 +82,7 @@ const CardInfo = () => {
       await updateDoc(doc(db, "users", walletAddress), {
         coins: increment(-price),
         inventory: arrayUnion({
-          tokenURI: string,
+          tokenURI: card.tokenURI,
           id: card.id,
           name: card.name,
           description: card.description,

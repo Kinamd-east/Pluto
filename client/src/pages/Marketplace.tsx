@@ -5,7 +5,6 @@ import { toast } from "sonner";
 import { ethers } from "ethers";
 import { useCardMarketplaceContract } from "../hooks/useCardMarketplaceContract";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import { updateDoc, doc, increment, arrayUnion } from "firebase/firestore";
 import { db } from "../firebase";
