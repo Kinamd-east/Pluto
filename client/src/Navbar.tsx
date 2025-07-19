@@ -14,7 +14,9 @@ const Navbar = () => {
   const coinStoreContract = usePlutoCoinStoreContract(signer);
   const coinContract = usePlutoCoinContract(signer);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [amountInEth, setAmountInEth] = useState("0.0005");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [coinBalance, setCoinBalance] = useState("0");

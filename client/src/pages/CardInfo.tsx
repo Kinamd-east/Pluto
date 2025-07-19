@@ -1,14 +1,11 @@
-import { useWallet } from "../hooks/useWallet";
-import PlutoCoinAbi from "../abi/PlutoCoin.json";
 import { useParams } from "react-router";
-import { ethers } from "ethers";
 import { useCardMarketplaceContract } from "../hooks/useCardMarketplaceContract";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { usePlutoCoinContract } from "../hooks/usePlutoCoin";
 import { useWalletContext } from "@/contexts/WalletContext";
 import { Button } from "@/components/ui/button";
-import { ipfsToHttp, toIpfsUri } from "@/lib/ipfs";
+import { toIpfsUri } from "@/lib/ipfs";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import {
   collection,
@@ -28,7 +25,6 @@ type CardDoc = {
   name: string;
   description: string;
   image: string;
-  price: number;
   attack: number;
   defense: number;
   class: string;
@@ -41,7 +37,7 @@ type CardDoc = {
 };
 
 const CardInfo = () => {
-  const { signer, walletAddress, loading } = useWalletContext();
+  const { signer, walletAddress } = useWalletContext();
   const { id } = useParams<{ id: string }>();
   const [card, setCard] = useState<CardDoc | null>(null);
   const [isBuying, setIsBuying] = useState(false);
@@ -51,7 +47,8 @@ const CardInfo = () => {
   const coinContract = usePlutoCoinContract(signer);
 
   const handleBuyCard = async (price: number, tokenURI: string) => {
-    if (!signer || !walletAddress || !cardMarketplace) return;
+    if (!signer || !walletAddress || !cardMarketplace || !coinContract || !card)
+      return;
 
     setIsBuying(true);
 
